@@ -74,12 +74,30 @@ label {
     display: block;
 }
 
-input {
+/* Input container */
+.input-container {
+    position: relative;
     width: 100%;
-    padding: 10px;
+}
+
+/* Input field */
+.input-container input {
+    width: 100%;
+    padding: 10px 30px 10px 10px; /* Add padding to the right for the indicator */
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 16px;
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+/* Status indicator */
+#tote-status {
+    position: absolute;
+    right: 10px; /* Position the indicator inside the input field */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    font-size: 20px;
+    pointer-events: none; /* Ensure the indicator doesn't interfere with input */
 }
 
 /* Button */

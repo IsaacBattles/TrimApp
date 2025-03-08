@@ -34,7 +34,10 @@
                 </div>
                 <div class="form-group">
                     <label for="tote_number">Tote Number</label>
-                    <input type="text" id="tote_number" name="tote_number" placeholder="Enter tote number">
+                    <div class="input-container">
+                        <input type="text" id="tote_number" name="tote_number" placeholder="Enter tote number">
+                        <span id="tote-status"></span> <!-- Status indicator inside the input field -->
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="weight">Original Tote Weight (lbs)</label>
@@ -60,5 +63,46 @@
             </form>
         </div>
     </div>
+
+    <!-- JavaScript for dynamic feedback -->
+    <script>
+        document.getElementById("tote_number").addEventListener("blur", function () {
+            const toteNumber = this.value;
+            const statusElement = document.getElementById("tote-status");
+
+            if (toteNumber) {
+                console.log("Checking tote number:", toteNumber); // Debug: Log the tote number
+                fetch(`/check_tote?tote_number=${toteNumber}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("API response:", data); // Debug: Log the API response
+                        if (data.status === "empty") {
+                            console.log("Tote is empty"); // Debug: Log if tote is empty
+                            statusElement.textContent = "✅"; // Green checkmark
+                            statusElement.style.color = "green";
+                        } else if (data.status === "duplicate") {
+                            console.log("Tote is a duplicate"); // Debug: Log if tote is a duplicate
+                            statusElement.textContent = "❌"; // Red cross
+                            statusElement.style.color = "red";
+                        } else {
+                            console.log("Tote not found"); // Debug: Log if tote is not found
+                            statusElement.textContent = ""; // Clear status
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error checking tote number:", error);
+                        statusElement.textContent = ""; // Clear status on error
+                    });
+            } else {
+                console.log("Tote number input is empty"); // Debug: Log if input is empty
+                statusElement.textContent = ""; // Clear status if input is empty
+            }
+        });
+    </script>
 </body>
 </html>

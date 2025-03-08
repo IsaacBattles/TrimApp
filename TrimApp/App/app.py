@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import pandas as pd
 from datetime import datetime
 from update import update_tote
@@ -64,6 +64,28 @@ def index():
 
     # Render the form template for GET requests
     return render_template("index.html")
+
+# API endpoint to check tote number
+@app.route("/check_tote", methods=["GET"])
+def check_tote():
+    tote_number = request.args.get("tote_number")
+    data = pd.read_csv(file_path)
+
+    # Convert 'Tote #' column to integers
+    data['Tote #'] = pd.to_numeric(data['Tote #'], errors='coerce').dropna().astype(int)
+
+    # Check if the tote number exists (compare as strings)
+    tote_row = data[data['Tote #'].astype(str) == str(tote_number)]
+    if tote_row.empty:
+        return jsonify({"status": "not_found"})
+
+    # Check if the row is empty (excluding the 'Date' column)
+    is_empty = tote_row.iloc[:, 1:].isnull().all().all()
+
+    if is_empty:
+        return jsonify({"status": "empty"})
+    else:
+        return jsonify({"status": "duplicate"})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)
