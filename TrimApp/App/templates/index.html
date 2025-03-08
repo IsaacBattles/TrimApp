@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tote Log Updater</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="fullscreen-container">
+        <div class="container">
+            <!-- Application name with logo -->
+            <div class="app-header">
+                <h1>Tote Log Updater</h1>
+                <img src="{{ url_for('static', filename='BOM-circle logo.jpg') }}" alt="BOM Logo" class="app-logo">
+            </div>
+
+            <!-- Flash messages section -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Form starts here -->
+            <form id="toteForm" method="POST">
+                <div class="form-group">
+                    <label for="trimmer">Trimmer #</label>
+                    <input type="text" id="trimmer" name="trimmer" placeholder="Enter trimmer number">
+                </div>
+                <div class="form-group">
+                    <label for="tote_number">Tote Number</label>
+                    <input type="text" id="tote_number" name="tote_number" placeholder="Enter tote number">
+                </div>
+                <div class="form-group">
+                    <label for="weight">Original Tote Weight (lbs)</label>
+                    <input type="text" id="weight" name="weight" placeholder="Enter tote weight">
+                </div>
+                <div class="form-group">
+                    <label for="flower">Flower (grams)</label>
+                    <input type="text" id="flower" name="flower" placeholder="Enter flower amount">
+                </div>
+                <div class="form-group">
+                    <label for="smalls">Smalls (grams)</label>
+                    <input type="text" id="smalls" name="smalls" placeholder="Enter smalls amount">
+                </div>
+                <div class="form-group">
+                    <label for="trim">Trim (grams)</label>
+                    <input type="text" id="trim" name="trim" placeholder="Enter trim weight">
+                </div>
+                <div class="form-group">
+                    <label for="trash">Trash (grams)</label>
+                    <input type="text" id="trash" name="trash" placeholder="Enter trash weight">
+                </div>
+                <button type="submit" class="btn">Update Tote</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
